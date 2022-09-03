@@ -1,0 +1,16 @@
+<launch>
+    <!-- set your data config -->
+    <param name="save_directory" type="string" value="$(find camera_image)/result/"/>
+
+    <!-- set your params-->
+    <!--    <rosparam file="$(find camera_image)/config/tese=t.yaml" command="load"/>-->
+
+    <!--LIO-->
+    <node pkg="camera_image" type="test_node" name="test_node" output="screen" required="true"/>
+
+    <arg name="rviz" default="true"/>
+    <group if="$(arg rviz)">
+        <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz_pgo"
+              args="-d $(find camera_image)/rviz/test.rviz"/>
+    </group>
+</launch>
