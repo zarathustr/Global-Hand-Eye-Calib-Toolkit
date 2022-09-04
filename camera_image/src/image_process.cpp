@@ -51,18 +51,20 @@ void ImageProcess::Process() {
             }
 
             bool transformReceived = true;
-            ros::Time align_time = ros::Time().fromSec(camera0_msg->header.stamp.toSec() - 4);
-            m_tfListener.waitForTransform("/base", "/tool0_controller", align_time, ros::Duration(1.0));
+            //ros::Time align_time = ros::Time().fromSec(camera0_msg->header.stamp.toSec() - 4);
+            //m_tfListener.waitForTransform("/base", "/tool0_controller", align_time, ros::Duration(1.0));
+            m_tfListener.waitForTransform("/base", "/tool0_controller", ros::Time(0), ros::Duration(4.0));
             tf::StampedTransform sensorToBaseTf;
             try {
-                m_tfListener.lookupTransform("/base", "tool0_controller", align_time, sensorToBaseTf);
+                //  m_tfListener.lookupTransform("/base", "tool0_controller", align_time, sensorToBaseTf);
+                m_tfListener.lookupTransform("/base", "tool0_controller", ros::Time(0), sensorToBaseTf);
             }
             catch (tf::TransformException &ex) {
                 ROS_ERROR_STREAM("Transform error of sensor data: " << ex.what() << ", quitting callback");
                 transformReceived = false;
             }
 
-            if (!imageReceived || !transformReceived){
+            if (!imageReceived || !transformReceived) {
                 ROS_ERROR("WAITING FOR PROPER TF OR IMAGES");
                 continue;
             }
@@ -73,7 +75,7 @@ void ImageProcess::Process() {
             index++;
             cv::Mat image_mat = cv_left_ptr->image;
             // segmment fault
-            // ImageDistort(image_mat, 0);
+            //ImageDistort(image_mat, 0);
 
             Mat gray;
             cvtColor(image_mat, gray, cv::COLOR_BGR2GRAY);
